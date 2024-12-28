@@ -18,6 +18,7 @@ const AviatorGame = () => {
   const [sineOffset, setSineOffset] = useState(0); // Offset for sine wave start
   const [countdown, setCountdown] = useState(8); // Countdown timer
   const [betData, setBetData] = useState({});
+  const [transitioning, setTransitioning] = useState(false); // Smooth transition state
 
   useEffect(() => {
     if (!socket) return;
@@ -66,6 +67,19 @@ const AviatorGame = () => {
     setSineOffset(0); // Reset sine offset (if it's used for motion)
   };
 
+  // Listen for updates from the server (e.g., position, speed, motionType)
+  useEffect(() => {
+    socket.on("gameUpdate", (data) => {
+      setPosition(data.position);
+      setSpeed(data.speed);
+      setMotionType(data.motionType);
+    });
+
+    return () => {
+      socket.off("gameUpdate"); // Clean up the listener
+    };
+  }, []);
+
   useEffect(() => {
     let motionInterval;
     let speedInterval;
@@ -96,8 +110,18 @@ const AviatorGame = () => {
           } else if (motionType === "parabolic") {
             nextY = 550 - 0.002 * (nextX - 300) ** 2; // Parabolic motion
           } else if (motionType === "sine") {
-            const sineX = nextX - sineOffset;
-            nextY = 300 + 50 * Math.sin((sineX / 100) * Math.PI); // Sine wave
+            if (transitioning) {
+              // Gradual interpolation during transition
+              const targetY = 300 + 50 * Math.sin(((nextX - sineOffset) / 100) * Math.PI); // Sine wave target
+              nextY = prev.y + (targetY - prev.y) * 0.1; // Smooth interpolation
+              if (Math.abs(nextY - targetY) < 1) {
+                setTransitioning(false); // End transition once aligned
+              }
+            } else {
+              // Normal sine wave motion
+              const sineX = nextX - sineOffset;
+              nextY = 300 + 50 * Math.sin((sineX / 100) * Math.PI);
+            }
           } else if (motionType === "flat") {
             nextY = 300; // Flat motion
           }
@@ -119,6 +143,7 @@ const AviatorGame = () => {
 
       // Transition from parabolic to sine after 5 seconds
       if (timeElapsed >= 5000 && motionType === "parabolic") {
+        setTransitioning(true); // Trigger smooth transition
         setMotionType("sine");
         setSineOffset(position.x); // Set the sine wave offset
       }
@@ -360,8 +385,49 @@ const AviatorGame = () => {
           Stop
         </button>
       </div>
+      
+      <Graph position={position} speed={speed} />
+      <div style={{ marginTop: "20px", color: "white", fontSize: "24px" }}>
+        <span style={{ fontWeight: "bold" }}>Speed:</span>{" "}
+        <span style={{ color: "limegreen", fontSize: "28px" }}>
+          {speed.toFixed(2)}x
+        </span>
+      </div>
+      <button
+        onClick={startGame}
+        style={{
+          marginTop: "20px",
+          padding: "10px 20px",
+          fontSize: "18px",
+          backgroundColor: "#008CBA",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        {isStarted ? "Restart" : "Fly"}
+      </button>
+      <button
+        onClick={triggerFlatMotion}
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px 20px",
+          fontSize: "18px",
+          backgroundColor: "#f44336",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Flat
+      </button>
     </div>
   );
 };
 
 export default AviatorGame;
+
+
