@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { io } from "socket.io-client"; // Import socket.io-client
 import Graph from "./Graph";
+
+// Create socket connection
+const socket = io("http://localhost:5000"); // Change to your server URL
 
 const AviatorGame = () => {
   const [speed, setSpeed] = useState(1); // Initial speed
@@ -9,6 +13,19 @@ const AviatorGame = () => {
   const [timeElapsed, setTimeElapsed] = useState(0); // Time elapsed since start
   const [sineOffset, setSineOffset] = useState(0); // Offset for sine wave start
   const [transitioning, setTransitioning] = useState(false); // Smooth transition state
+
+  // Listen for updates from the server (e.g., position, speed, motionType)
+  useEffect(() => {
+    socket.on("gameUpdate", (data) => {
+      setPosition(data.position);
+      setSpeed(data.speed);
+      setMotionType(data.motionType);
+    });
+
+    return () => {
+      socket.off("gameUpdate"); // Clean up the listener
+    };
+  }, []);
 
   useEffect(() => {
     let motionInterval;
@@ -93,15 +110,22 @@ const AviatorGame = () => {
     setIsStarted(true); // Start the game
     setTimeElapsed(0); // Reset elapsed time
     setSineOffset(0); // Reset sine offset
+
+    // Emit start game event to the server
+    socket.emit("startGame", { position, speed, motionType });
   };
 
   const triggerFlatMotion = () => {
     setMotionType("flat");
+
+    // Emit motion update to the server
+    socket.emit("motionUpdate", { motionType: "flat" });
   };
 
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Aviator Game</h1>
+      
       <Graph position={position} speed={speed} />
       <div style={{ marginTop: "20px", color: "white", fontSize: "24px" }}>
         <span style={{ fontWeight: "bold" }}>Speed:</span>{" "}
@@ -145,6 +169,5 @@ const AviatorGame = () => {
 };
 
 export default AviatorGame;
-
 
 

@@ -7,12 +7,12 @@ const Graph = ({ position, speed, isFlat }) => {
       style={{
         position: "relative",
         height: "600px",
-        width: "100%",
+        width: "50%",
         backgroundColor: "black",
       }}
     >
       {/* Background */}
-      <rect x="0" y="0" width="800" height="600" fill="black" />
+      <rect x="0" y="0" width="400" height="600" fill="black" />
 
       {/* Speed Display */}
       <text
