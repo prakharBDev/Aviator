@@ -67,19 +67,6 @@ const AviatorGame = () => {
     setSineOffset(0); // Reset sine offset (if it's used for motion)
   };
 
-  // Listen for updates from the server (e.g., position, speed, motionType)
-  useEffect(() => {
-    socket.on("gameUpdate", (data) => {
-      setPosition(data.position);
-      setSpeed(data.speed);
-      setMotionType(data.motionType);
-    });
-
-    return () => {
-      socket.off("gameUpdate"); // Clean up the listener
-    };
-  }, []);
-
   useEffect(() => {
     let motionInterval;
     let speedInterval;
@@ -154,7 +141,7 @@ const AviatorGame = () => {
         clearInterval(timer);
       };
     }
-  }, [isStarted, motionType, position.x, sineOffset, speed, timeElapsed]);
+  }, [isStarted, motionType, position.x, sineOffset, speed, timeElapsed, transitioning]);
 
   const triggerFlatMotion = () => {
     setMotionType("flat");
