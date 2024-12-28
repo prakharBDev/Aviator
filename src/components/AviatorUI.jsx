@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useSocket } from "../socketContext"; // Import the socket context
 import Graph from "./Graph";
+import Button from "./Button";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import { FiMinusCircle } from "react-icons/fi";
+import { motion } from "framer-motion";
+import BetTable from "./BetTable";
 
 const AviatorGame = () => {
+  const [activeButton, setActiveButton] = useState("bet");
   const socket = useSocket(); // Access the socket instance from context
   const [speed, setSpeed] = useState(1); // Initial speed
   const [position, setPosition] = useState({ x: 0, y: 550 }); // Initial position
@@ -58,8 +64,7 @@ const AviatorGame = () => {
     setIsStarted(false); // Stop the game
     setTimeElapsed(0); // Reset elapsed time
     setSineOffset(0); // Reset sine offset (if it's used for motion)
-};
-
+  };
 
   useEffect(() => {
     let motionInterval;
@@ -70,8 +75,8 @@ const AviatorGame = () => {
       // Timer to track elapsed time
       timer = setInterval(() => {
         setTimeElapsed((prev) => prev + 50);
-      }, 50);  
-    
+      }, 50);
+
       // Update position based on motion type
       motionInterval = setInterval(() => {
         setSpeed((prevSpeed) => {
@@ -125,7 +130,6 @@ const AviatorGame = () => {
       };
     }
   }, [isStarted, motionType, position.x, sineOffset, speed, timeElapsed]);
-  
 
   const triggerFlatMotion = () => {
     setMotionType("flat");
@@ -134,68 +138,213 @@ const AviatorGame = () => {
   return (
     <div style={{ textAlign: "center" }}>
       <h1>Aviator Game</h1>
-      {!isStarted && (
-        <div style={{ marginBottom: "20px", fontSize: "24px", color: "red" }}>
-          Starting in: {countdown} seconds
-        </div>
-      )}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start'}}>
-        <table style={{ border: '1px solid black', borderCollapse: 'collapse', margin: '0 auto' }}>
-          <thead>
-            <tr>
-              <th style={{ border: '1px solid black', padding: '8px' }}>User Name</th>
-              <th style={{ border: '1px solid black', padding: '8px' }}>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {betData && Object.entries(betData).map(([key, value]) => (
-              <tr key={key}>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{key}</td>
-                <td style={{ border: '1px solid black', padding: '8px' }}>{value?.initialBet}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div style={{ flex: 1 }}>
+      {/* <div style={{ position: "relative" }}>
         <Graph position={position} speed={speed} />
+       
+      </div> */}
+      <div style={{ display: "flex" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            background: "black",
+          }}
+        >
+          <BetTable betData={betData} />
+        </div>
+        <div style={{ flex: 1, position: "relative" }}>
+          <Graph position={position} speed={speed} />
+          {!isStarted && (
+            <div
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "24px",
+                color: "red",
+                textAlign: "center",
+                zIndex: 10,
+              }}
+            >
+              Starting in: {countdown} seconds
+            </div>
+          )}
+        </div>
       </div>
-      <button
-        onClick={triggerFlatMotion}
-        disabled={!isStarted}
-        style={{
-          marginTop: "20px",
-          marginLeft: "10px",
-          padding: "10px 20px",
-          fontSize: "18px",
-          backgroundColor: "#f44336",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          opacity: isStarted ? 1 : 0.5,
-        }}
-      >
-        Flat
-      </button>
-      {!isStarted && (
+
+      <div className="w-8/12 h-52 mx-auto  flex justify-between bg-black p-2">
+        <div className="customDark w-2/5 rounded-xl bg-customDark mx-2">
+          <div className="w-full flex justify-center mt-2">
+            <div className="relative w-40 h-6 bg-[#141516] border-2 border-[#141516] rounded-full p-2">
+              {/* Sliding background */}
+              <motion.div
+                className="absolute top-0 bottom-0 left-0 right-0 w-1/2 bg-customDark rounded-full"
+                layout
+                initial={false}
+                animate={{
+                  x: activeButton === "bet" ? 0 : "100%",
+                }}
+                transition={{ type: "", stiffness: 500, damping: 40 }}
+              />
+
+              {/* Buttons */}
+              <div className="relative z-10 flex justify-between items-center h-full">
+                <button
+                  onClick={() => setActiveButton("bet")}
+                  className={`flex-1 text-center ${
+                    activeButton === "bet" ? "text-white" : "text-[#9ea0a3]"
+                  }`}
+                >
+                  Bet
+                </button>
+                <button
+                  onClick={() => setActiveButton("auto")}
+                  className={`flex-1 text-center ${
+                    activeButton === "auto" ? "text-white" : "text-[#9ea0a3]"
+                  }`}
+                >
+                  Auto
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between items-center p-2 mt-5">
+            <div className="">
+              <div className="bg-black w-40 h-10 rounded-full flex justify-between items-center px-2">
+                <button className="text-2xl">
+                  <FiMinusCircle />
+                </button>
+                <b className="text-2xl">10.00</b>
+                <button className=" text-2xl">
+                  <IoIosAddCircleOutline />
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mt-1">
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  100.00
+                </button>
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  200.00
+                </button>
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  500.00
+                </button>
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  1,000.00
+                </button>
+              </div>
+            </div>
+            <div>
+              <Button />
+            </div>
+          </div>
+        </div>
+        <div className="customDark w-2/5 rounded-xl bg-customDark mx-2">
+          <div className="w-full flex justify-center mt-2">
+            <div className="relative w-40 h-6 bg-[#141516] border-2 border-[#141516] rounded-full p-2">
+              {/* Sliding background */}
+              <motion.div
+                className="absolute top-0 bottom-0 left-0 right-0 w-1/2 bg-customDark rounded-full"
+                layout
+                initial={false}
+                animate={{
+                  x: activeButton === "bet" ? 0 : "100%",
+                }}
+                transition={{ type: "", stiffness: 500, damping: 40 }}
+              />
+
+              {/* Buttons */}
+              <div className="relative z-10 flex justify-between items-center h-full">
+                <button
+                  onClick={() => setActiveButton("bet")}
+                  className={`flex-1 text-center ${
+                    activeButton === "bet" ? "text-white" : "text-[#9ea0a3]"
+                  }`}
+                >
+                  Bet
+                </button>
+                <button
+                  onClick={() => setActiveButton("auto")}
+                  className={`flex-1 text-center ${
+                    activeButton === "auto" ? "text-white" : "text-[#9ea0a3]"
+                  }`}
+                >
+                  Auto
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between items-center p-2 mt-5">
+            <div className="">
+              <div className="bg-black w-40 h-10 rounded-full flex justify-between items-center px-2">
+                <button className="text-2xl">
+                  <FiMinusCircle />
+                </button>
+                <b className="text-2xl">10.00</b>
+                <button className=" text-2xl">
+                  <IoIosAddCircleOutline />
+                </button>
+              </div>
+              <div className="grid grid-cols-2 gap-2 mt-1">
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  100.00
+                </button>
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  200.00
+                </button>
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  500.00
+                </button>
+                <button className="w-16 h-[18px] bg-[#141516] text-[#ffffff80] rounded-full text-[14px]">
+                  1,000.00
+                </button>
+              </div>
+            </div>
+            <div>
+              <Button />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
         <button
-          onClick={startGame}
+          onClick={triggerFlatMotion}
+          disabled={!isStarted}
           style={{
             marginTop: "20px",
+            marginLeft: "10px",
             padding: "10px 20px",
             fontSize: "18px",
-            backgroundColor: "#4CAF50",
+            backgroundColor: "#f44336",
             color: "white",
             border: "none",
             borderRadius: "5px",
             cursor: "pointer",
+            opacity: isStarted ? 1 : 0.5,
           }}
         >
-          Fly
+          Flat
         </button>
-      )}
-      <button
+        {!isStarted && (
+          <button
+            onClick={startGame}
+            style={{
+              marginTop: "20px",
+              padding: "10px 20px",
+              fontSize: "18px",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Fly
+          </button>
+        )}
+        <button
           onClick={stopGame}
           style={{
             marginTop: "20px",
@@ -210,6 +359,7 @@ const AviatorGame = () => {
         >
           Stop
         </button>
+      </div>
     </div>
   );
 };
