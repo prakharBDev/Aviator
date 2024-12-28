@@ -8,6 +8,7 @@ const AviatorGame = () => {
   const [isStarted, setIsStarted] = useState(false); // Game start state
   const [timeElapsed, setTimeElapsed] = useState(0); // Time elapsed since start
   const [sineOffset, setSineOffset] = useState(0); // Offset for sine wave start
+  const [transitioning, setTransitioning] = useState(false); // Smooth transition state
 
   useEffect(() => {
     let motionInterval;
@@ -39,8 +40,18 @@ const AviatorGame = () => {
           } else if (motionType === "parabolic") {
             nextY = 550 - 0.002 * (nextX - 300) ** 2; // Parabolic motion
           } else if (motionType === "sine") {
-            const sineX = nextX - sineOffset;
-            nextY = 300 + 50 * Math.sin((sineX / 100) * Math.PI); // Sine wave
+            if (transitioning) {
+              // Gradual interpolation during transition
+              const targetY = 300 + 50 * Math.sin(((nextX - sineOffset) / 100) * Math.PI); // Sine wave target
+              nextY = prev.y + (targetY - prev.y) * 0.1; // Smooth interpolation
+              if (Math.abs(nextY - targetY) < 1) {
+                setTransitioning(false); // End transition once aligned
+              }
+            } else {
+              // Normal sine wave motion
+              const sineX = nextX - sineOffset;
+              nextY = 300 + 50 * Math.sin((sineX / 100) * Math.PI);
+            }
           } else if (motionType === "flat") {
             nextY = 300; // Flat motion
           }
@@ -62,6 +73,7 @@ const AviatorGame = () => {
 
       // Transition from parabolic to sine after 5 seconds
       if (timeElapsed >= 5000 && motionType === "parabolic") {
+        setTransitioning(true); // Trigger smooth transition
         setMotionType("sine");
         setSineOffset(position.x); // Set the sine wave offset
       }
@@ -72,7 +84,7 @@ const AviatorGame = () => {
         clearInterval(timer);
       };
     }
-  }, [isStarted, motionType, position.x, speed, timeElapsed]);
+  }, [isStarted, motionType, position.x, speed, timeElapsed, transitioning]);
 
   const startGame = () => {
     setSpeed(1); // Reset speed
@@ -133,5 +145,6 @@ const AviatorGame = () => {
 };
 
 export default AviatorGame;
+
 
 
