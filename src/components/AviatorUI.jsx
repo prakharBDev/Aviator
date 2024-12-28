@@ -321,65 +321,7 @@ const AviatorGame = () => {
         </div>
       </div>
       <div>
-        <button
-          onClick={triggerFlatMotion}
-          disabled={!isStarted}
-          style={{
-            marginTop: "20px",
-            marginLeft: "10px",
-            padding: "10px 20px",
-            fontSize: "18px",
-            backgroundColor: "#f44336",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            opacity: isStarted ? 1 : 0.5,
-          }}
-        >
-          Flat
-        </button>
-        {!isStarted && (
-          <button
-            onClick={startGame}
-            style={{
-              marginTop: "20px",
-              padding: "10px 20px",
-              fontSize: "18px",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Fly
-          </button>
-        )}
-        <button
-          onClick={stopGame}
-          style={{
-            marginTop: "20px",
-            padding: "10px 20px",
-            fontSize: "18px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          Stop
-        </button>
-      </div>
-      
-      <Graph position={position} speed={speed} />
-      <div style={{ marginTop: "20px", color: "white", fontSize: "24px" }}>
-        <span style={{ fontWeight: "bold" }}>Speed:</span>{" "}
-        <span style={{ color: "limegreen", fontSize: "28px" }}>
-          {speed.toFixed(2)}x
-        </span>
-      </div>
+        
       <button
         onClick={startGame}
         style={{
@@ -411,6 +353,22 @@ const AviatorGame = () => {
       >
         Flat
       </button>
+        <button
+          onClick={stopGame}
+          style={{
+            marginTop: "20px",
+            padding: "10px 20px",
+            fontSize: "18px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          Stop
+        </button>
+      </div>
     </div>
   );
 };
