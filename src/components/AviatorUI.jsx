@@ -71,24 +71,24 @@ const AviatorGame = () => {
     let motionInterval;
     let speedInterval;
     let timer;
-
+  
     if (isStarted) {
       // Timer to track elapsed time
       timer = setInterval(() => {
         setTimeElapsed((prev) => prev + 50);
       }, 50);
-
+  
+      // Gradually increase speed
+      speedInterval = setInterval(() => {
+        setSpeed((prevSpeed) => Math.min(prevSpeed + 0.02, 10)); // Increment speed up to 10x
+      }, 100);
+  
       // Update position based on motion type
       motionInterval = setInterval(() => {
-        setSpeed((prevSpeed) => {
-          // Increment the speed by a small decimal value, e.g., 0.01 every interval
-          return prevSpeed + 0.009; // Increment speed by 0.01 per interval
-        });
-
         setPosition((prev) => {
           const nextX = prev.x + speed * 2;
           let nextY;
-
+  
           if (motionType === "takeoff") {
             nextY = prev.y - 1.5 * speed; // Realistic takeoff
             if (prev.y <= 400) {
@@ -100,8 +100,8 @@ const AviatorGame = () => {
             if (transitioning) {
               // Gradual interpolation during transition
               const targetY = 300 + 50 * Math.sin(((nextX - sineOffset) / 100) * Math.PI); // Sine wave target
-              nextY = prev.y + (targetY - prev.y) * 0.1; // Smooth interpolation
-              if (Math.abs(nextY - targetY) < 1) {
+              nextY = prev.y + (targetY - prev.y) * 0.2; // Smooth weighted interpolation
+              if (Math.abs(nextY - targetY) < 0.5) {
                 setTransitioning(false); // End transition once aligned
               }
             } else {
@@ -112,36 +112,37 @@ const AviatorGame = () => {
           } else if (motionType === "flat") {
             nextY = 300; // Flat motion
           }
-
+  
           // Restart when plane exits the screen
           if (nextX > 800) {
             setTimeout(() => {
               setPosition({ x: 0, y: 550 });
               setMotionType("takeoff");
-              // setSpeed(1);
+              setSpeed(1);
               setTimeElapsed(0);
               setSineOffset(0);
             }, 3000);
           }
-
+  
           return { x: nextX, y: Math.max(nextY, 50) }; // Ensure Y stays in bounds
         });
       }, 50);
-
+  
       // Transition from parabolic to sine after 5 seconds
       if (timeElapsed >= 5000 && motionType === "parabolic") {
         setTransitioning(true); // Trigger smooth transition
         setMotionType("sine");
         setSineOffset(position.x); // Set the sine wave offset
       }
-
+  
       return () => {
         clearInterval(motionInterval);
         clearInterval(speedInterval);
         clearInterval(timer);
       };
     }
-  }, [isStarted, motionType, position.x, sineOffset, speed, timeElapsed, transitioning]);
+  }, [isStarted, motionType, position.x, speed, timeElapsed, transitioning]);
+  
 
   const triggerFlatMotion = () => {
     setMotionType("flat");
