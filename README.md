@@ -1,70 +1,198 @@
-# Getting Started with Create React App
+# Aviator Crash Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A complete real-time multiplayer Aviator crash game built with React frontend and Node.js backend.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### Frontend (React)
 
-### `npm start`
+- ⚡ Real-time multiplayer gameplay with Socket.io
+- 🎨 Modern dark theme with glassmorphism effects
+- 📱 Fully responsive design for all devices
+- 🎯 Dual betting system (two simultaneous bets)
+- 🤖 Auto-cashout functionality with target multiplier
+- 📊 Live game history showing last 20 rounds
+- 🔔 Real-time notifications system
+- 🎭 Smooth animations with Framer Motion
+- 📈 Animated multiplier curve visualization
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Backend (Node.js)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 🔐 Cryptographically secure random crash point generation
+- ⚖️ Provably fair algorithm implementation
+- 🎲 Realistic crash distribution (60% 1.1x-2x, 30% 2x-10x, 10% 10x+)
+- 🔄 Real-time game loop with WebSocket communication
+- 👥 Player session management and balance tracking
+- 📚 Game history storage (last 100 rounds)
+- 🛡️ Input validation and security measures
+- 🚀 High-performance real-time updates (100ms intervals)
 
-### `npm test`
+## Quick Start
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Prerequisites
 
-### `npm run build`
+- Node.js (v14 or higher)
+- npm or yarn
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Installation
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone the repository:**
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+git clone <repository-url>
+cd aviator-game
+```
 
-### `npm run eject`
+2. **Install frontend dependencies:**
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. **Install backend dependencies:**
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+cd backend
+npm install
+cd ..
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. **Start the backend server:**
 
-## Learn More
+```bash
+cd backend
+npm run dev
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+The backend will start on http://localhost:5000
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+5. **Start the frontend (in a new terminal):**
 
-### Code Splitting
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+The frontend will start on http://localhost:3000
 
-### Analyzing the Bundle Size
+## Game Rules
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+1. **Waiting Phase (5 seconds)**: Players can place bets and set auto-cashout multipliers
+2. **Flying Phase**: The multiplier starts at 1.00x and increases exponentially
+3. **Crash**: The game randomly crashes, and players who didn't cash out lose their bets
+4. **Payout**: Players who cashed out before the crash receive their bet × multiplier
 
-### Making a Progressive Web App
+## Technical Architecture
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Frontend Structure
 
-### Advanced Configuration
+```
+src/
+├── components/
+│   ├── AviatorGame.jsx     # Main game component
+│   └── ...                 # Other components
+├── socket.js               # Socket.io client configuration
+├── socketContext.js        # React context for socket
+├── index.css              # Global styles with glassmorphism
+└── App.js                 # Main app component
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Backend Structure
 
-### Deployment
+```
+backend/
+├── server.js              # Main server file
+├── package.json           # Backend dependencies
+└── README.md             # Backend documentation
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Key Technologies
 
-### `npm run build` fails to minify
+- **Frontend**: React, Tailwind CSS, Framer Motion, Socket.io Client
+- **Backend**: Node.js, Express, Socket.io, Crypto API
+- **Real-time Communication**: WebSocket with Socket.io
+- **Styling**: Tailwind CSS with custom glassmorphism effects
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Game Features
+
+### Betting System
+
+- Place up to 2 simultaneous bets
+- Adjustable bet amounts with +/- controls
+- Auto-cashout with target multiplier settings
+- Real-time balance tracking
+
+### Visual Effects
+
+- Animated multiplier curve that grows with the game
+- Neon glow effects and smooth transitions
+- Glassmorphism UI elements
+- Responsive design for mobile and desktop
+
+### Multiplayer Features
+
+- See other players' bets in real-time
+- Live notifications when players cash out
+- Game history with color-coded results
+- Player activity feed
+
+## Development
+
+### Frontend Development
+
+```bash
+npm start          # Start development server
+npm run build      # Build for production
+npm test           # Run tests
+```
+
+### Backend Development
+
+```bash
+cd backend
+npm run dev        # Start with nodemon (auto-restart)
+npm start          # Start production server
+```
+
+## Configuration
+
+### Environment Variables
+
+- `PORT`: Backend server port (default: 5000)
+- `NODE_ENV`: Environment mode (development/production)
+
+### Customization
+
+- Modify crash distribution in `backend/server.js`
+- Adjust game timing and multiplier curve
+- Customize UI colors and animations in Tailwind config
+
+## Security
+
+- Provably fair random number generation
+- Server-side bet validation
+- Balance checking and fraud prevention
+- Secure WebSocket connections
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Support
+
+For issues and questions:
+
+1. Check the documentation
+2. Review existing issues
+3. Create a new issue with detailed information
+
+---
+
+**Note**: This is a demonstration project. For production use, implement additional security measures, database persistence, and proper user authentication.

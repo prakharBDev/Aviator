@@ -25,7 +25,7 @@ const Graph = ({ position, speed, isFlat }) => {
       style={{
         position: "relative",
         height: "600px",
-        width: "50%",
+        width: "100%",
         backgroundColor: "black",
       }}
     >

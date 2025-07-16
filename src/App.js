@@ -1,10 +1,10 @@
 import React from "react";
-import AviatorUI from "./components/AviatorUI";
+import AviatorGame from "./components/AviatorGame";
 
 function App() {
   return (
     <div className="App">
-      <AviatorUI />
+      <AviatorGame />
     </div>
   );
 }

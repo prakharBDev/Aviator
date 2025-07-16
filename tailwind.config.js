@@ -1,13 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     extend: {
+      animation: {
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "bounce-slow": "bounce 2s infinite",
+      },
+      backdropBlur: {
+        xs: "2px",
+      },
       colors: {
-        customDark: "#1b1c1d", // Add your custom color here
+        glass: "rgba(255, 255, 255, 0.1)",
+        "glass-border": "rgba(255, 255, 255, 0.2)",
       },
       boxShadow: {
-        custom: "inset 0 1px 1px rgba(255, 255, 255, 0.5)",
+        glass: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
+        custom: "0 4px 15px 0 rgba(31, 38, 135, 0.4)",
       },
     },
   },
