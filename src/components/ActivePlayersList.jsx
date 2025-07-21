@@ -1,139 +1,46 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
-  // Add dummy data to fill the list
-  const dummyPlayers = [
-    {
-      id: 1,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: true,
-      cashoutMultiplier: 1.52,
-      payout: 152.0,
-    },
-    {
-      id: 2,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: true,
-      cashoutMultiplier: 1.5,
-      payout: 150.0,
-    },
-    {
-      id: 3,
-      username: "d***4",
-      betAmount: 100.0,
-      cashedOut: true,
-      cashoutMultiplier: 1.57,
-      payout: 157.0,
-    },
-    {
-      id: 4,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 5,
-      username: "d***2",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 6,
-      username: "d***3",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 7,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 8,
-      username: "d***4",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 9,
-      username: "d***3",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 10,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 11,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 12,
-      username: "d***5",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 13,
-      username: "d***5",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 14,
-      username: "d***5",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 15,
-      username: "d***8",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 16,
-      username: "d***0",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-  ];
+// Function to generate random usernames
+const generateRandomUsername = () => {
+  const prefixes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const randomNumber = Math.floor(Math.random() * 10);
+  return `${randomPrefix}***${randomNumber}`;
+};
 
+// Function to generate random bet amounts
+const generateRandomBetAmount = () => {
+  const amounts = [10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10000];
+  const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+  return randomAmount;
+};
+
+// Function to generate random player data
+const generateRandomPlayers = (count = 16) => {
+  const players = [];
+  for (let i = 0; i < count; i++) {
+    const betAmount = generateRandomBetAmount();
+    const cashedOut = Math.random() > 0.7; // 30% chance of cashing out
+    const cashoutMultiplier = cashedOut ? (Math.random() * 3 + 1.1).toFixed(2) : null;
+    const payout = cashedOut ? (betAmount * parseFloat(cashoutMultiplier)).toFixed(2) : 0;
+    
+    players.push({
+      id: i + 1,
+      username: generateRandomUsername(),
+      betAmount: betAmount,
+      cashedOut: cashedOut,
+      cashoutMultiplier: cashoutMultiplier ? parseFloat(cashoutMultiplier) : null,
+      payout: parseFloat(payout),
+    });
+  }
+  return players;
+};
+
+const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
+  // Generate random dummy data once when component mounts
+  const dummyPlayers = useMemo(() => generateRandomPlayers(16), []);
+  
   // Combine real players with dummy data
   const allPlayers = [...players, ...dummyPlayers];
 
