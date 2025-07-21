@@ -279,14 +279,14 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
                 
                 {/* Show potential earnings for cashed out players */}
                 {isCashed && gamePhase === "flying" && (
-                  <div className={`text-xs mt-1 ${
+                  <div className={`text-xs mt-1 font-medium ${
                     potentialProfit > actualProfit 
-                      ? "text-yellow-400" // Could have earned more
-                      : "text-green-400"  // Made the right choice
+                      ? "text-orange-300 bg-orange-900/30 px-2 py-1 rounded-full border border-orange-500/50" // Could have earned more
+                      : "text-emerald-300 bg-emerald-900/30 px-2 py-1 rounded-full border border-emerald-500/50"  // Made the right choice
                   }`}>
                     {potentialProfit > actualProfit 
-                      ? `Could earn: +$${potentialProfit.toFixed(2)}` 
-                      : `Smart choice! +$${actualProfit.toFixed(2)}`
+                      ? `💭 Could earn: +$${potentialProfit.toFixed(2)}` 
+                      : `✅ Smart choice! +$${actualProfit.toFixed(2)}`
                     }
                   </div>
                 )}
