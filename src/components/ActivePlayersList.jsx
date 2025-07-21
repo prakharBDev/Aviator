@@ -207,7 +207,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
     <div className="bg-black rounded-lg p-4 border border-gray-800 h-full">
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-base font-bold text-blue-200 flex items-center gap-2">
-          <span>🧑‍🤝‍🧑 Active Players</span>
+          👥 Active Players
           <span className="text-xs bg-blue-900/80 px-2 py-0.5 rounded-full text-blue-300">
             {allPlayers.length}
           </span>
