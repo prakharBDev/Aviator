@@ -1,33 +1,221 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
-node_modules
+# ===== DEPENDENCIES =====
+node_modules/
 /.pnp
 .pnp.js
+package-lock.json
+yarn.lock
 
-# testing
+# ===== TESTING =====
 /coverage
+.nyc_output
+*.lcov
+.jest/
 
-# production
+# ===== PRODUCTION BUILDS =====
 /build
+/dist
+/out
+.next/
+.nuxt/
+.vuepress/dist
 
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Ignore .mov files
-*.mov
-
-# Environment variables
+# ===== DEVELOPMENT =====
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.*.local
+
+# ===== LOGS =====
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# ===== RUNTIME DATA =====
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# ===== COVERAGE DIRECTORY =====
+lib-cov
+
+# ===== GRUNT INTERMEDIATE STORAGE =====
+.grunt
+
+# ===== BOWER DEPENDENCY DIRECTORY =====
+bower_components
+
+# ===== NODE-WAF CONFIGURATION =====
+.lock-wscript
+
+# ===== COMPILED BINARY ADDONS =====
+build/Release
+
+# ===== DEPENDENCY DIRECTORIES =====
+jspm_packages/
+
+# ===== TYPESCRIPT =====
+*.tsbuildinfo
+
+# ===== OPTIONAL NPM CACHE DIRECTORY =====
+.npm
+
+# ===== OPTIONAL ESLINT CACHE =====
+.eslintcache
+
+# ===== MICROBUNDLE CACHE =====
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# ===== OPTIONAL REPL HISTORY =====
+.node_repl_history
+
+# ===== OUTPUT OF 'NPM PACK' =====
+*.tgz
+
+# ===== YARN INTEGRITY FILE =====
+.yarn-integrity
+
+# ===== DOTENV ENVIRONMENT VARIABLE FILES =====
+.env
+.env.test
+.env.production
+
+# ===== PARCEL-BUNDLER CACHE =====
+.cache
+.parcel-cache
+
+# ===== NEXT.JS BUILD OUTPUT =====
+.next
+
+# ===== NUXT.JS BUILD / GENERATE OUTPUT =====
+.nuxt
+dist
+
+# ===== GATSBY FILES =====
+.cache/
+public
+
+# ===== STORYBOOK BUILD OUTPUTS =====
+.out
+.storybook-out
+
+# ===== TEMPORARY FOLDERS =====
+tmp/
+temp/
+
+# ===== EDITOR FILES =====
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ===== OS GENERATED FILES =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ===== MEDIA FILES =====
+*.mov
+*.mp4
+*.avi
+*.mkv
+*.wmv
+*.flv
+*.webm
+
+# ===== AUDIO FILES =====
+*.mp3
+*.wav
+*.flac
+*.aac
+*.ogg
+
+# ===== IMAGE FILES =====
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.svg
+*.ico
+
+# ===== DOCUMENT FILES =====
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+
+# ===== ARCHIVE FILES =====
+*.zip
+*.rar
+*.7z
+*.tar
+*.gz
+*.bz2
+
+# ===== BACKUP FILES =====
+*.bak
+*.backup
+*.old
+*.orig
+
+# ===== LOCAL CONFIGURATION =====
+config.local.js
+config.local.json
+settings.local.js
+settings.local.json
+
+# ===== DATABASE FILES =====
+*.db
+*.sqlite
+*.sqlite3
+
+# ===== SSL CERTIFICATES =====
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# ===== DOCKER =====
+.dockerignore
+docker-compose.override.yml
+
+# ===== KUBERNETES =====
+*.kubeconfig
+
+# ===== TERRAFORM =====
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# ===== ANSIBLE =====
+*.retry
+
+# ===== LOGS =====
+logs/
+*.log
+
+# ===== CACHE =====
+.cache/
+.temp/
