@@ -68,17 +68,18 @@ const generateRandomPlayers = (count = 16) => {
   const players = [];
   for (let i = 0; i < count; i++) {
     const betAmount = generateRandomBetAmount();
-    const cashedOut = Math.random() > 0.7; // 30% chance of cashing out
-    const cashoutMultiplier = cashedOut ? (Math.random() * 3 + 1.1).toFixed(2) : null;
-    const payout = cashedOut ? (betAmount * parseFloat(cashoutMultiplier)).toFixed(2) : 0;
+    
+    // Generate random cashout multiplier (between 1.1x and 5.0x)
+    const cashoutMultiplier = (Math.random() * 3.9 + 1.1).toFixed(2);
     
     players.push({
       id: i + 1,
       username: generateRandomUsername(),
       betAmount: betAmount,
-      cashedOut: cashedOut,
-      cashoutMultiplier: cashoutMultiplier ? parseFloat(cashoutMultiplier) : null,
-      payout: parseFloat(payout),
+      cashedOut: false, // All players start as not cashed out
+      cashoutMultiplier: parseFloat(cashoutMultiplier), // Target multiplier for cashout
+      payout: 0, // Will be calculated when they cash out
+      hasCashedOut: false, // Track if they've already cashed out this game
     });
   }
   return players;
@@ -90,6 +91,35 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
   
   // Combine real players with dummy data
   const allPlayers = [...players, ...dummyPlayers];
+
+  // Process players for cashout events during flying phase
+  const processedPlayers = useMemo(() => {
+    if (gamePhase === "flying" && currentMultiplier > 1.0) {
+      return allPlayers.map(player => {
+        // Check if player should cash out at current multiplier
+        if (!player.hasCashedOut && 
+            player.cashoutMultiplier && 
+            currentMultiplier >= player.cashoutMultiplier) {
+          
+          // Add some randomness to cashout timing (not exactly at target)
+          const actualCashoutMultiplier = Math.min(
+            currentMultiplier, 
+            player.cashoutMultiplier + (Math.random() * 0.5) // Add up to 0.5x randomness
+          );
+          
+          return {
+            ...player,
+            cashedOut: true,
+            hasCashedOut: true,
+            actualCashoutMultiplier: actualCashoutMultiplier.toFixed(2),
+            payout: (player.betAmount * actualCashoutMultiplier).toFixed(2)
+          };
+        }
+        return player;
+      });
+    }
+    return allPlayers;
+  }, [allPlayers, currentMultiplier, gamePhase]);
 
   const getPlayerStatus = (player) => {
     if (player.cashedOut) {
@@ -163,7 +193,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         <h3 className="text-base font-bold text-blue-200 flex items-center gap-2">
           <span>🧑‍🤝‍🧑 Active Players</span>
           <span className="text-xs bg-blue-900/80 px-2 py-0.5 rounded-full text-blue-300">
-            {allPlayers.length}
+            {processedPlayers.length}
           </span>
         </h3>
         <div className="text-xs text-blue-400 font-semibold">
@@ -174,7 +204,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
       </div>
 
       <div className="space-y-3 max-h-[570px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
-        {allPlayers.map((player, index) => {
+        {processedPlayers.map((player, index) => {
           const isCashed = player.cashedOut;
           const isFlying = !player.cashedOut && gamePhase === "flying";
           const profit = isCashed
@@ -258,7 +288,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
                     {isCashed || isFlying
                       ? `@ ${
                           isCashed
-                            ? player.cashoutMultiplier?.toFixed(2)
+                            ? (player.actualCashoutMultiplier || player.cashoutMultiplier?.toFixed(2))
                             : currentMultiplier.toFixed(2)
                         }x`
                       : ""}
@@ -270,12 +300,12 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         })}
       </div>
 
-      {allPlayers.length > 0 && (
+      {processedPlayers.length > 0 && (
         <div className="mt-4 pt-3 border-t border-gray-800 flex justify-between text-sm text-gray-400">
           <span>Total Bets:</span>
           <span className="text-white font-semibold">
             $
-            {allPlayers
+            {processedPlayers
               .reduce((sum, player) => sum + (player.betAmount || 0), 0)
               .toFixed(2)}
           </span>
