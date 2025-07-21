@@ -1378,7 +1378,6 @@ const AviatorGame = () => {
             />
           </div>
           {/* Betting Panel */}
-          {/* Betting Panel */}
           <div className=" flex flex-row w-full gap-4">
             {/* Bet 1 */}
             <div className="bg-[#1b1c1d] w-1/2 rounded-lg p-4 border border-gray-700">
