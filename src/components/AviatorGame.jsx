@@ -1378,265 +1378,363 @@ const AviatorGame = () => {
             />
           </div>
           {/* Betting Panel */}
+          {/* Betting Panel */}
           <div className=" flex flex-row w-full gap-4">
             {/* Bet 1 */}
-            <div className="bg-black w-1/2 rounded-lg p-4 border border-gray-800">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold">🎯 Bet 1</h3>
-                <button
-                  onClick={() => setShowAutoCashout1(!showAutoCashout1)}
-                  className="text-sm text-purple-400 hover:text-purple-300"
-                >
-                  Auto Cashout
-                </button>
+            <div className="bg-[#1b1c1d] w-1/2 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-center mb-3">
+                <div className="bg-[#141516] w-52 p-1 rounded-2xl flex justify-between relative">
+                  {/* Bet Button */}
+                  <button
+                    className={`w-1/2 rounded-2xl ${
+                      !showAutoCashout1
+                        ? "bg-[#1b1c1d] text-white"
+                        : "text-gray-300"
+                    }`}
+                    onClick={() => setShowAutoCashout1(false)}
+                  >
+                    Bet
+                  </button>
+
+                  {/* Auto Button with Dropdown */}
+                  <div className="relative w-1/2">
+                    <button
+                      onClick={() => setShowAutoCashout1(true)}
+                      className={`w-full rounded-2xl ${
+                        showAutoCashout1
+                          ? "bg-[#1b1c1d] text-white"
+                          : " text-white"
+                      }`}
+                    >
+                      Auto
+                    </button>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() =>
-                      setBet1((prev) => ({
-                        ...prev,
-                        amount: Math.max(1, prev.amount - 1),
-                      }))
-                    }
-                    className="w-10 h-10 bg-gray-700 rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    value={bet1.amount}
-                    onChange={(e) =>
-                      setBet1((prev) => ({
-                        ...prev,
-                        amount: parseFloat(e.target.value) || 0,
-                      }))
-                    }
-                    className="flex-1 bg-gray-700 rounded-lg px-3 py-2 text-center font-semibold"
-                    disabled={bet1.active}
-                  />
-                  <button
-                    onClick={() =>
-                      setBet1((prev) => ({ ...prev, amount: prev.amount + 1 }))
-                    }
-                    className="w-10 h-10 bg-gray-700 rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
-                  >
-                    +
-                  </button>
-                </div>
-
-                {/* Potential Win Display */}
-                {bet1.active && (
-                  <div className="bg-blue-500/20 rounded-lg p-2 text-center border border-blue-500/30">
-                    <div className="text-sm text-blue-300">Potential Win</div>
-                    <div className="text-lg font-semibold text-blue-400">
-                      ${getPotentialWin(bet1.amount)}
-                    </div>
-                  </div>
-                )}
-
-                {showAutoCashout1 && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                  >
+              <div className="flex gap-10">
+                <div>
+                  {/* Amount Controller */}
+                  <div className="flex items-center bg-[#141516] p-2 rounded-2xl w-36 space-x-2">
+                    <button
+                      onClick={() =>
+                        setBet1((prev) => ({
+                          ...prev,
+                          amount: Math.max(1, prev.amount - 1),
+                        }))
+                      }
+                      className="w-6 h-6 bg-[#1b1c1d] rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
+                    >
+                      -
+                    </button>
                     <input
                       type="number"
-                      placeholder="Auto cashout at..."
-                      value={bet1.autoCashout || ""}
+                      value={bet1.amount}
                       onChange={(e) =>
                         setBet1((prev) => ({
                           ...prev,
-                          autoCashout: parseFloat(e.target.value) || null,
+                          amount: parseFloat(e.target.value) || 0,
                         }))
                       }
-                      className="w-full bg-gray-700 rounded-lg px-3 py-2"
-                      step="0.1"
-                      min="1.1"
+                      className="flex-1 w-2/3 bg-transparent rounded-lg text-center font-semibold"
+                      disabled={bet1.active}
                     />
-                  </motion.div>
-                )}
-
-                {/* Bet 1 Buttons */}
-                {!bet1.active ? (
-                  <button
-                    onClick={() => placeBet(1)}
-                    disabled={gameState.phase !== "waiting"}
-                    className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md transition-all duration-150 hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-400 ${
-                      gameState.phase !== "waiting"
-                        ? "opacity-60 cursor-not-allowed"
-                        : ""
-                    }`}
-                  >
-                    <span className="mr-2">🎯</span> Bet
-                  </button>
-                ) : (
-                  <div className="space-y-2">
-                    {!bet1.cashedOut ? (
-                      <button
-                        onClick={cashOut}
-                        disabled={gameState.phase !== "flying"}
-                        className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md transition-all duration-150 hover:from-purple-600 hover:to-purple-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400 ${
-                          gameState.phase !== "flying"
-                            ? "opacity-60 cursor-not-allowed"
-                            : ""
-                        }`}
-                      >
-                        <span className="mr-2">💸</span> Auto Cashout
-                      </button>
-                    ) : (
-                      <div className="text-center py-3 bg-green-600/20 rounded-lg border border-green-500/30">
-                        <div className="text-green-400 font-semibold">
-                          ✅ Cashed Out!
-                        </div>
-                        <div className="text-sm text-gray-300">
-                          Payout: ${bet1.payout.toFixed(2)}
-                        </div>
-                        <div
-                          className={`text-sm font-semibold ${
-                            bet1.profit >= 0 ? "text-green-400" : "text-red-400"
-                          }`}
-                        >
-                          Profit: {bet1.profit >= 0 ? "+" : ""}$
-                          {bet1.profit.toFixed(2)}
-                        </div>
-                      </div>
-                    )}
+                    <button
+                      onClick={() =>
+                        setBet1((prev) => ({
+                          ...prev,
+                          amount: prev.amount + 1,
+                        }))
+                      }
+                      className="w-6 h-6 bg-[#1b1c1d] rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
+                    >
+                      +
+                    </button>
                   </div>
-                )}
-              </div>
-            </div>
 
-            {/* Bet 2 */}
-            <div className="bg-black w-1/2 rounded-lg p-4 border border-gray-800">
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="text-lg font-semibold">🎯 Bet 2</h3>
-                <button
-                  onClick={() => setShowAutoCashout2(!showAutoCashout2)}
-                  className="text-sm text-purple-400 hover:text-purple-300"
-                >
-                  Auto Cashout
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() =>
-                      setBet2((prev) => ({
-                        ...prev,
-                        amount: Math.max(1, prev.amount - 1),
-                      }))
-                    }
-                    className="w-10 h-10 bg-gray-700 rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
-                  >
-                    -
-                  </button>
-                  <input
-                    type="number"
-                    value={bet2.amount}
-                    onChange={(e) =>
-                      setBet2((prev) => ({
-                        ...prev,
-                        amount: parseFloat(e.target.value) || 0,
-                      }))
-                    }
-                    className="flex-1 bg-gray-700 rounded-lg px-3 py-2 text-center font-semibold"
-                    disabled={bet2.active}
-                  />
-                  <button
-                    onClick={() =>
-                      setBet2((prev) => ({ ...prev, amount: prev.amount + 1 }))
-                    }
-                    className="w-10 h-10 bg-gray-700 rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
-                  >
-                    +
-                  </button>
+                  {/* Quick Amount Buttons */}
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {[100, 200, 500, 1000].map((amt) => (
+                      <button
+                        key={amt}
+                        onClick={() =>
+                          setBet1((prev) => ({
+                            ...prev,
+                            amount: amt,
+                          }))
+                        }
+                        className="px-3 py-1 rounded-lg bg-[#141516] text-white hover:bg-gray-600 text-sm font-medium"
+                      >
+                        {amt}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Potential Win Display */}
-                {bet2.active && (
-                  <div className="bg-blue-500/20 rounded-lg p-2 text-center border border-blue-500/30">
-                    <div className="text-sm text-blue-300">Potential Win</div>
-                    <div className="text-lg font-semibold text-blue-400">
-                      ${getPotentialWin(bet2.amount)}
-                    </div>
-                  </div>
-                )}
 
-                {showAutoCashout2 && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
+                {/* Betting / Cash Out Logic */}
+                <div className="w-full  ">
+                  {" "}
+                  {!bet1.active ? (
+                    <button
+                      onClick={() => placeBet(1)}
+                      disabled={gameState.phase !== "waiting"}
+                      className={`w-full h-full py-3 rounded-lg font-semibold transition-all ${
+                        gameState.phase === "waiting"
+                          ? "bg-[#28a909] hover:bg-green-700 text-white"
+                          : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                      }`}
+                    >
+                      {gameState.phase === "waiting"
+                        ? "🎯 Place Bet"
+                        : "⏱️ Betting Closed"}
+                    </button>
+                  ) : (
+                    <div className="w-full h-full">
+                      {!bet1.cashedOut ? (
+                        <button
+                          onClick={cashOut}
+                          disabled={gameState.phase !== "flying"}
+                          className={`w-full h-full py-3 rounded-lg flex flex-col justify-center items-center font-semibold transition-all ${
+                            gameState.phase === "flying"
+                              ? "bg-orange-600 hover:bg-orange-700 text-white animate-pulse"
+                              : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                          }`}
+                        >
+                          💰 Cash Out
+                          {bet1.active && (
+                            <span className="ml-2 text-sm text-gray-300">
+                              {" "}
+                              ${getPotentialWin(bet1.amount)}
+                            </span>
+                          )}
+                        </button>
+                      ) : (
+                        <div className="text-center py-3 bg-green-600/20 rounded-lg border border-green-500/30">
+                          <div className="text-green-400 font-semibold">
+                            ✅ Cashed Out!
+                          </div>
+                          <div className="text-sm text-gray-300">
+                            Payout: ${bet1.payout.toFixed(2)}
+                          </div>
+                          <div
+                            className={`text-sm font-semibold ${
+                              bet1.profit >= 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }`}
+                          >
+                            Profit: {bet1.profit >= 0 ? "+" : ""}$
+                            {bet1.profit.toFixed(2)}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {showAutoCashout1 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className=" w-full mt-2 z-10"
+                >
+                  <input
+                    type="number"
+                    placeholder="Auto cashout at..."
+                    value={bet1.autoCashout || ""}
+                    onChange={(e) =>
+                      setBet1((prev) => ({
+                        ...prev,
+                        autoCashout: parseFloat(e.target.value) || null,
+                      }))
+                    }
+                    className="w-full bg-gray-700 rounded-lg px-3 py-2"
+                    step="0.1"
+                    min="1.1"
+                  />
+                </motion.div>
+              )}
+            </div>
+
+            {/* Bet 2 */}
+            <div className="bg-[#1b1c1d] w-1/2 rounded-lg p-4 border border-gray-700">
+              <div className="flex items-center justify-center mb-3">
+                <div className="bg-[#141516] w-52 p-1 rounded-2xl flex justify-between relative">
+                  {/* Bet Button */}
+                  <button
+                    className={`w-1/2 rounded-2xl ${
+                      !showAutoCashout2
+                        ? "bg-[#1b1c1d] text-white"
+                        : "text-gray-300"
+                    }`}
+                    onClick={() => setShowAutoCashout2(false)}
                   >
+                    Bet
+                  </button>
+
+                  {/* Auto Button + Input */}
+                  <div className="relative w-1/2">
+                    <button
+                      onClick={() => setShowAutoCashout2(true)}
+                      className={`w-full rounded-2xl ${
+                        showAutoCashout2
+                          ? "bg-[#1b1c1d] text-white"
+                          : "text-white"
+                      }`}
+                    >
+                      Auto
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-10">
+                {/* Amount Controls */}
+                <div>
+                  <div className="flex items-center bg-[#141516] p-2 rounded-2xl w-36 space-x-2">
+                    <button
+                      onClick={() =>
+                        setBet2((prev) => ({
+                          ...prev,
+                          amount: Math.max(1, prev.amount - 1),
+                        }))
+                      }
+                      className="w-6 h-6 bg-[#1b1c1d] rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
+                    >
+                      -
+                    </button>
                     <input
                       type="number"
-                      placeholder="Auto cashout at..."
-                      value={bet2.autoCashout || ""}
+                      value={bet2.amount}
                       onChange={(e) =>
                         setBet2((prev) => ({
                           ...prev,
-                          autoCashout: parseFloat(e.target.value) || null,
+                          amount: parseFloat(e.target.value) || 0,
                         }))
                       }
-                      className="w-full bg-gray-700 rounded-lg px-3 py-2"
-                      step="0.1"
-                      min="1.1"
+                      className="flex-1 w-2/3 bg-transparent rounded-lg text-center font-semibold"
+                      disabled={bet2.active}
                     />
-                  </motion.div>
-                )}
+                    <button
+                      onClick={() =>
+                        setBet2((prev) => ({
+                          ...prev,
+                          amount: prev.amount + 1,
+                        }))
+                      }
+                      className="w-6 h-6 bg-[#1b1c1d] rounded-lg hover:bg-gray-600 flex items-center justify-center font-bold text-lg"
+                    >
+                      +
+                    </button>
+                  </div>
 
-                {/* Bet 2 Buttons */}
-                {!bet2.active ? (
-                  <button
-                    onClick={() => placeBet(2)}
-                    disabled={gameState.phase !== "waiting"}
-                    className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md transition-all duration-150 hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-400 ${
-                      gameState.phase !== "waiting"
-                        ? "opacity-60 cursor-not-allowed"
-                        : ""
-                    }`}
-                  >
-                    <span className="mr-2">🎯</span> Bet
-                  </button>
-                ) : (
-                  <div className="space-y-2">
-                    {!bet2.cashedOut ? (
+                  {/* Quick Amounts */}
+                  <div className="grid grid-cols-2 gap-2 mt-2">
+                    {[100, 200, 500, 1000].map((amt) => (
                       <button
-                        onClick={cashOut}
-                        disabled={gameState.phase !== "flying"}
-                        className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md transition-all duration-150 hover:from-purple-600 hover:to-purple-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400 ${
-                          gameState.phase !== "flying"
-                            ? "opacity-60 cursor-not-allowed"
-                            : ""
-                        }`}
+                        key={amt}
+                        onClick={() =>
+                          setBet2((prev) => ({
+                            ...prev,
+                            amount: amt,
+                          }))
+                        }
+                        className="px-3 py-1 rounded-lg bg-[#141516] text-white hover:bg-gray-600 text-sm font-medium"
                       >
-                        <span className="mr-2">💸</span> Auto Cashout
+                        {amt}
                       </button>
-                    ) : (
-                      <div className="text-center py-3 bg-green-600/20 rounded-lg border border-green-500/30">
-                        <div className="text-green-400 font-semibold">
-                          ✅ Cashed Out!
-                        </div>
-                        <div className="text-sm text-gray-300">
-                          Payout: ${bet2.payout.toFixed(2)}
-                        </div>
-                        <div
-                          className={`text-sm font-semibold ${
-                            bet2.profit >= 0 ? "text-green-400" : "text-red-400"
+                    ))}
+                  </div>
+                </div>
+
+                {/* Betting Logic */}
+                <div className=" w-full">
+                  {/* Potential Win Display */}
+
+                  {/* Bet or Cash Out */}
+                  {!bet2.active ? (
+                    <button
+                      onClick={() => placeBet(2)}
+                      disabled={gameState.phase !== "waiting"}
+                      className={`w-full h-full py-3 rounded-lg font-semibold transition-all ${
+                        gameState.phase === "waiting"
+                          ? "bg-[#28a909] hover:bg-green-700 text-white"
+                          : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                      }`}
+                    >
+                      {gameState.phase === "waiting"
+                        ? "🎯 Place Bet"
+                        : "⏱️ Betting Closed"}
+                    </button>
+                  ) : (
+                    <div className="w-full h-full">
+                      {!bet2.cashedOut ? (
+                        <button
+                          onClick={cashOut}
+                          disabled={gameState.phase !== "flying"}
+                          className={`w-full h-full py-3 flex flex-col justify-center items-center rounded-lg font-semibold transition-all ${
+                            gameState.phase === "flying"
+                              ? "bg-orange-600 hover:bg-orange-700 text-white animate-pulse"
+                              : "bg-gray-600 text-gray-400 cursor-not-allowed"
                           }`}
                         >
-                          Profit: {bet2.profit >= 0 ? "+" : ""}$
-                          {bet2.profit.toFixed(2)}
+                          💰 Cash Out
+                          {bet2.active && (
+                            <span className="ml-2 text-sm text-gray-300">
+                              ${getPotentialWin(bet2.amount)}
+                            </span>
+                          )}
+                        </button>
+                      ) : (
+                        <div className="text-center py-3 bg-green-600/20 rounded-lg border border-green-500/30">
+                          <div className="text-green-400 font-semibold">
+                            ✅ Cashed Out!
+                          </div>
+                          <div className="text-sm text-gray-300">
+                            Payout: ${bet2.payout.toFixed(2)}
+                          </div>
+                          <div
+                            className={`text-sm font-semibold ${
+                              bet2.profit >= 0
+                                ? "text-green-400"
+                                : "text-red-400"
+                            }`}
+                          >
+                            Profit: {bet2.profit >= 0 ? "+" : ""}$
+                            {bet2.profit.toFixed(2)}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                )}
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
+              {showAutoCashout2 && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className=" mt-2 w-full z-20"
+                >
+                  <input
+                    type="number"
+                    placeholder="Auto cashout at..."
+                    value={bet2.autoCashout || ""}
+                    onChange={(e) =>
+                      setBet2((prev) => ({
+                        ...prev,
+                        autoCashout: parseFloat(e.target.value) || null,
+                      }))
+                    }
+                    className="w-full bg-gray-700 text-white rounded-lg px-3 py-2"
+                    step="0.1"
+                    min="1.1"
+                  />
+                </motion.div>
+              )}
             </div>
           </div>
         </div>
