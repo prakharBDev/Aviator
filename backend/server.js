@@ -50,7 +50,9 @@ function generateCrashPoint(serverSeed, clientSeed, gameId) {
   const seed = parseInt(hex.substring(0, 8), 16);
   const crashPoint = Math.max(1.0, (2 ** 32 / (seed + 1)) * 0.99);
 
-  return Math.max(1.01, crashPoint);
+  // Apply maximum crash point limit of 15x
+  const maxCrashPoint = 15.0;
+  return Math.max(1.01, Math.min(crashPoint, maxCrashPoint));
 }
 
 function getCurrentMultiplier() {
@@ -112,8 +114,8 @@ function startFlyingPhase() {
   const flyingInterval = setInterval(() => {
     gameState.multiplier = getCurrentMultiplier();
 
-    // Check if crash point reached
-    if (gameState.multiplier >= gameState.crashPoint) {
+    // Check if crash point reached or if multiplier hits 15x (safety check)
+    if (gameState.multiplier >= gameState.crashPoint || gameState.multiplier >= 15.0) {
       clearInterval(flyingInterval);
       crashGame();
       return;
