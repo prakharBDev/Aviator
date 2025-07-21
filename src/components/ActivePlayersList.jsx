@@ -204,118 +204,127 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
   };
 
   return (
-    <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700 h-full">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-          👥 Active Players
-          <span className="text-sm text-gray-400">({allPlayers.length})</span>
+    <div className="bg-black rounded-lg p-4 border border-gray-800 h-full">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="text-base font-bold text-blue-200 flex items-center gap-2">
+          <span>🧑‍🤝‍🧑 Active Players</span>
+          <span className="text-xs bg-blue-900/80 px-2 py-0.5 rounded-full text-blue-300">
+            {allPlayers.length}
+          </span>
         </h3>
-        <div className="text-xs text-gray-500">
-          {gamePhase === "flying" && (
-            <span className="text-blue-400">🚀 In Flight</span>
-          )}
-          {gamePhase === "waiting" && (
-            <span className="text-yellow-400">⏰ Waiting</span>
-          )}
-          {gamePhase === "crashed" && (
-            <span className="text-red-400">💥 Crashed</span>
-          )}
+        <div className="text-xs text-blue-400 font-semibold">
+          {gamePhase === "flying" && "🚀 In Flight"}
+          {gamePhase === "waiting" && "⏰ Waiting"}
+          {gamePhase === "crashed" && "💥 Crashed"}
         </div>
       </div>
 
-      <div className="space-y-2 max-h-[550px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
-        <AnimatePresence mode="popLayout">
-          {allPlayers.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <div className="text-4xl mb-2">🎮</div>
-              <p>No active players</p>
-              <p className="text-sm">Be the first to place a bet!</p>
-            </div>
-          ) : (
-            allPlayers.map((player, index) => {
-              const playerStatus = getPlayerStatus(player);
-              return (
-                <motion.div
-                  key={`${player.username}-${index}`}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  whileHover={{ scale: 1.02 }}
-                  className={`p-3 rounded-lg border ${playerStatus.bgColor} ${playerStatus.borderColor} transition-all duration-300`}
+      <div className="space-y-3 max-h-[540px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+        {allPlayers.map((player, index) => {
+          const isCashed = player.cashedOut;
+          const isFlying = !player.cashedOut && gamePhase === "flying";
+          const profit = isCashed
+            ? player.payout - player.betAmount
+            : player.betAmount * currentMultiplier - player.betAmount;
+
+          return (
+            <div
+              key={player.id || index}
+              className={`rounded-2xl p-4 flex justify-between items-center shadow-lg transition-all duration-200 backdrop-blur-sm
+                ${
+                  isCashed
+                    ? "bg-gradient-to-r from-green-900/90 to-green-800/80 border-2 border-green-400"
+                    : ""
+                }
+                ${
+                  isFlying
+                    ? "bg-gradient-to-r from-blue-900/90 to-blue-800/80 border-2 border-blue-400"
+                    : ""
+                }
+                ${
+                  !isCashed && !isFlying
+                    ? "bg-gradient-to-r from-gray-800/90 to-gray-900/80 border border-gray-700"
+                    : ""
+                }
+                hover:scale-[1.02] hover:shadow-2xl hover:ring-2 hover:ring-green-400`}
+            >
+              {/* Avatar/Icon */}
+              <div className="flex items-center gap-3">
+                <div
+                  className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg shadow
+                  ${
+                    isCashed
+                      ? "bg-green-500/80 text-white"
+                      : isFlying
+                      ? "bg-blue-500/80 text-white"
+                      : "bg-gray-700 text-gray-200"
+                  }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">
-                        {getStatusIcon(playerStatus.status)}
-                      </span>
-                      <div>
-                        <div className="font-medium text-white truncate max-w-24">
-                          {player.username}
-                        </div>
-                        <div className="text-xs text-gray-400">
-                          Bet: ${player.betAmount?.toFixed(2) || "0.00"}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-right">
-                      <div className={`font-semibold ${playerStatus.color}`}>
-                        {formatProfit(player)}
-                      </div>
-                      {player.cashedOut && (
-                        <div className="text-xs text-gray-400">
-                          @ {player.multiplier?.toFixed(2)}x
-                        </div>
-                      )}
-                      {gamePhase === "flying" && !player.cashedOut && (
-                        <div className="text-xs text-blue-400">
-                          @ {currentMultiplier.toFixed(2)}x
-                        </div>
-                      )}
-                    </div>
+                  {player.username[0].toUpperCase()}
+                </div>
+                <div>
+                  <div className="font-semibold text-white text-base">
+                    {player.username}
                   </div>
-
-                  {/* Status indicator */}
-                  <div className="mt-2 flex items-center gap-1">
-                    <div
-                      className={`w-2 h-2 rounded-full ${
-                        playerStatus.status === "cashed"
-                          ? "bg-green-500"
-                          : playerStatus.status === "lost"
-                          ? "bg-red-500"
-                          : playerStatus.status === "flying"
-                          ? "bg-blue-500 animate-pulse"
-                          : "bg-yellow-500"
-                      }`}
-                    ></div>
-                    <span className="text-xs text-gray-400">
-                      {playerStatus.status === "cashed"
-                        ? "Cashed out"
-                        : playerStatus.status === "lost"
-                        ? "Lost"
-                        : playerStatus.status === "flying"
-                        ? "Flying"
-                        : "Waiting"}
+                  <div className="text-xs text-gray-300">
+                    Bet: ${player.betAmount.toFixed(2)}
+                  </div>
+                </div>
+              </div>
+              {/* Profit and Status */}
+              <div className="text-right">
+                <div
+                  className={`font-extrabold text-2xl tracking-wide ${
+                    isCashed
+                      ? "text-green-300 animate-bounce"
+                      : isFlying
+                      ? "text-blue-300 animate-pulse"
+                      : "text-gray-300"
+                  }`}
+                >
+                  {profit > 0 ? "+" : ""}${profit.toFixed(2)}
+                </div>
+                <div className="flex items-center gap-2 mt-1">
+                  {(isCashed || isFlying) && (
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-xs font-semibold
+                      ${
+                        isCashed
+                          ? "bg-green-600/80 text-white"
+                          : isFlying
+                          ? "bg-blue-600/80 text-white"
+                          : "bg-gray-600/80 text-gray-200"
+                      }
+                    `}
+                    >
+                      {isCashed ? "Cashed Out" : "Flying"}
                     </span>
-                  </div>
-                </motion.div>
-              );
-            })
-          )}
-        </AnimatePresence>
+                  )}
+                  <span className="text-xs text-gray-400">
+                    {isCashed || isFlying
+                      ? `@ ${
+                          isCashed
+                            ? player.cashoutMultiplier?.toFixed(2)
+                            : currentMultiplier.toFixed(2)
+                        }x`
+                      : ""}
+                  </span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {allPlayers.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-gray-700">
-          <div className="flex justify-between text-sm text-gray-400">
-            <span>Total Bets:</span>
-            <span className="text-white font-semibold">
-              $
-              {allPlayers
-                .reduce((sum, player) => sum + (player.betAmount || 0), 0)
-                .toFixed(2)}
-            </span>
-          </div>
+        <div className="mt-4 pt-3 border-t border-gray-800 flex justify-between text-sm text-gray-400">
+          <span>Total Bets:</span>
+          <span className="text-white font-semibold">
+            $
+            {allPlayers
+              .reduce((sum, player) => sum + (player.betAmount || 0), 0)
+              .toFixed(2)}
+          </span>
         </div>
       )}
     </div>

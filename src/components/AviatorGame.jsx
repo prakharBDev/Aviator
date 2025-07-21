@@ -1193,7 +1193,7 @@ const AviatorGame = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">
+    <div className="min-h-screen bg-black text-white p-4">
       {/* Notifications */}
       <div className="fixed top-4 right-4 z-40 space-y-2">
         <AnimatePresence>
@@ -1217,13 +1217,13 @@ const AviatorGame = () => {
         </AnimatePresence>
       </div>
 
-      {/* Header - Clean minimalist design like reference */}
-      <div className="flex justify-between h-8 items-center mb-6 py-4 px-6 bg-gray-900 border-b border-gray-700">
+      {/* Header - Compact minimalist design */}
+      <div className="flex justify-between items-center mb-2 py-1 px-4 bg-black border-b border-gray-800">
         <div>
-          <h1 className="text-2xl font-bold text-red-500">Aviator</h1>
+          <h1 className="text-lg font-bold text-red-500">Aviator</h1>
         </div>
         <div className="text-right">
-          <div className="text-lg font-bold text-green-400">
+          <div className="text-base font-bold text-green-400">
             {player.balance.toFixed(2)} USD
           </div>
         </div>
@@ -1274,7 +1274,7 @@ const AviatorGame = () => {
         </div>
         <div className="lg:col-span-2 space-y-6">
           {/* Game Display */}
-          <div className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+          <div className="bg-black rounded-lg p-4 border border-gray-800">
             <div className="relative">
               {/* Game History Section */}
               <div
@@ -1325,7 +1325,7 @@ const AviatorGame = () => {
               )}
             </div>
           </div>
-          <div className="bg-gray-800/50 rounded-lg p-6 border border-gray-700 relative overflow-hidden">
+          <div className="bg-black rounded-lg p-6 border border-gray-800 relative overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 to-purple-900/20"></div>
 
             {/* Multiplier Display */}
@@ -1372,7 +1372,7 @@ const AviatorGame = () => {
           {/* Betting Panel */}
           <div className=" flex flex-row w-full gap-4">
             {/* Bet 1 */}
-            <div className="bg-gray-800/50 w-1/2 rounded-lg p-4 border border-gray-700">
+            <div className="bg-black w-1/2 rounded-lg p-4 border border-gray-800">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold">🎯 Bet 1</h3>
                 <button
@@ -1451,19 +1451,18 @@ const AviatorGame = () => {
                   </motion.div>
                 )}
 
+                {/* Bet 1 Buttons */}
                 {!bet1.active ? (
                   <button
                     onClick={() => placeBet(1)}
                     disabled={gameState.phase !== "waiting"}
-                    className={`w-full py-3 rounded-lg font-semibold transition-all ${
-                      gameState.phase === "waiting"
-                        ? "bg-green-600 hover:bg-green-700 text-white"
-                        : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md transition-all duration-150 hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-400 ${
+                      gameState.phase !== "waiting"
+                        ? "opacity-60 cursor-not-allowed"
+                        : ""
                     }`}
                   >
-                    {gameState.phase === "waiting"
-                      ? "🎯 Place Bet"
-                      : "⏱️ Betting Closed"}
+                    <span className="mr-2">🎯</span> Bet
                   </button>
                 ) : (
                   <div className="space-y-2">
@@ -1471,13 +1470,13 @@ const AviatorGame = () => {
                       <button
                         onClick={cashOut}
                         disabled={gameState.phase !== "flying"}
-                        className={`w-full py-3 rounded-lg font-semibold transition-all ${
-                          gameState.phase === "flying"
-                            ? "bg-orange-600 hover:bg-orange-700 text-white animate-pulse"
-                            : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                        className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md transition-all duration-150 hover:from-purple-600 hover:to-purple-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+                          gameState.phase !== "flying"
+                            ? "opacity-60 cursor-not-allowed"
+                            : ""
                         }`}
                       >
-                        💰 Cash Out
+                        <span className="mr-2">💸</span> Auto Cashout
                       </button>
                     ) : (
                       <div className="text-center py-3 bg-green-600/20 rounded-lg border border-green-500/30">
@@ -1503,7 +1502,7 @@ const AviatorGame = () => {
             </div>
 
             {/* Bet 2 */}
-            <div className="bg-gray-800/50 w-1/2 rounded-lg p-4 border border-gray-700">
+            <div className="bg-black w-1/2 rounded-lg p-4 border border-gray-800">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold">🎯 Bet 2</h3>
                 <button
@@ -1582,19 +1581,18 @@ const AviatorGame = () => {
                   </motion.div>
                 )}
 
+                {/* Bet 2 Buttons */}
                 {!bet2.active ? (
                   <button
                     onClick={() => placeBet(2)}
                     disabled={gameState.phase !== "waiting"}
-                    className={`w-full py-3 rounded-lg font-semibold transition-all ${
-                      gameState.phase === "waiting"
-                        ? "bg-green-600 hover:bg-green-700 text-white"
-                        : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                    className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-md transition-all duration-150 hover:from-green-600 hover:to-green-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-green-400 ${
+                      gameState.phase !== "waiting"
+                        ? "opacity-60 cursor-not-allowed"
+                        : ""
                     }`}
                   >
-                    {gameState.phase === "waiting"
-                      ? "🎯 Place Bet"
-                      : "⏱️ Betting Closed"}
+                    <span className="mr-2">🎯</span> Bet
                   </button>
                 ) : (
                   <div className="space-y-2">
@@ -1602,13 +1600,13 @@ const AviatorGame = () => {
                       <button
                         onClick={cashOut}
                         disabled={gameState.phase !== "flying"}
-                        className={`w-full py-3 rounded-lg font-semibold transition-all ${
-                          gameState.phase === "flying"
-                            ? "bg-orange-600 hover:bg-orange-700 text-white animate-pulse"
-                            : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                        className={`w-full py-3 rounded-xl font-semibold bg-gradient-to-r from-purple-500 to-purple-600 text-white shadow-md transition-all duration-150 hover:from-purple-600 hover:to-purple-700 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-purple-400 ${
+                          gameState.phase !== "flying"
+                            ? "opacity-60 cursor-not-allowed"
+                            : ""
                         }`}
                       >
-                        💰 Cash Out
+                        <span className="mr-2">💸</span> Auto Cashout
                       </button>
                     ) : (
                       <div className="text-center py-3 bg-green-600/20 rounded-lg border border-green-500/30">
