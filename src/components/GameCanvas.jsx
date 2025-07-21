@@ -7,7 +7,6 @@ const planeImages = [Plain0, Plain1, Plain2];
 
 const GameCanvas = ({ gameState }) => {
   const canvasRef = useRef(null);
-  const prevPhaseRef = useRef(null);
 
   // Plane animation state
   const [planeFrame, setPlaneFrame] = useState(0);
@@ -790,7 +789,7 @@ const GameCanvas = ({ gameState }) => {
         ctx.restore();
       }
     }
-  }, [gameState.multiplier, gameState.phase, planeFrame, planeFlyOut, backgroundOffset]);
+  }, [gameState.multiplier, gameState.phase, gameState.countdown, planeFrame, planeFlyOut, backgroundOffset]);
 
   return (
     <canvas
