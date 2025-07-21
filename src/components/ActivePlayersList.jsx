@@ -219,7 +219,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         </div>
       </div>
 
-      <div className="space-y-3 max-h-[540px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
+      <div className="space-y-3 max-h-[570px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
         {allPlayers.map((player, index) => {
           const isCashed = player.cashedOut;
           const isFlying = !player.cashedOut && gamePhase === "flying";

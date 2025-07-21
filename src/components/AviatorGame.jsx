@@ -238,7 +238,8 @@ const AviatorGame = () => {
     const height = canvasRef.current ? canvasRef.current.height : 300;
 
     // Calculate exact crash position (same as crash calculation)
-    const progress = Math.log(gameState.multiplier) / Math.log(20);
+    const progress =
+      Math.log(Math.min(gameState.multiplier, 15)) / Math.log(20);
     const smoothProgress = 1 - Math.pow(1 - progress, 4);
 
     const startX = 60;
@@ -770,7 +771,8 @@ const AviatorGame = () => {
         // Calculate base flight trajectory
         const maxMultiplier = 20; // Plane reaches exit at 20x
         const progress =
-          Math.log(gameState.multiplier) / Math.log(maxMultiplier);
+          Math.log(Math.min(gameState.multiplier, 15)) /
+          Math.log(maxMultiplier);
 
         // Smooth easing function for progress
         const smoothProgress = 1 - Math.pow(1 - progress, 3); // Ease-out cubic
@@ -977,7 +979,9 @@ const AviatorGame = () => {
         // Draw multiplier display in canvas - simple white text
         ctx.save();
 
-        const multiplierText = `${gameState.multiplier.toFixed(2)}x`;
+        const multiplierText = `${Math.min(gameState.multiplier, 15).toFixed(
+          2
+        )}x`;
         const multiplierX = width / 2;
         const multiplierY = height / 2 - 100;
 
@@ -1005,7 +1009,8 @@ const AviatorGame = () => {
       // Enhanced crash point without red dot - aviator flies from exact position
       if (gameState.phase === "crashed") {
         // Get the exact crash position (same calculation as flying plane)
-        const progress = Math.log(gameState.multiplier) / Math.log(20);
+        const progress =
+          Math.log(Math.min(gameState.multiplier, 15)) / Math.log(20);
         const smoothProgress = 1 - Math.pow(1 - progress, 4);
 
         const startX = 60;
@@ -1075,7 +1080,10 @@ const AviatorGame = () => {
         // Draw crash multiplier display in canvas - simple white text
         ctx.save();
 
-        const crashMultiplierText = `${gameState.multiplier.toFixed(2)}x`;
+        const crashMultiplierText = `${Math.min(
+          gameState.multiplier,
+          15
+        ).toFixed(2)}x`;
         const crashMultiplierX = width / 2;
         const crashMultiplierY = height / 2 - 100;
 
@@ -1181,7 +1189,7 @@ const AviatorGame = () => {
 
   const getPotentialWin = (betAmount) => {
     if (gameState.phase === "flying") {
-      return (betAmount * gameState.multiplier).toFixed(2);
+      return (betAmount * Math.min(gameState.multiplier, 15)).toFixed(2);
     }
     return betAmount.toFixed(2);
   };
