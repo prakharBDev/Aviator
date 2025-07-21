@@ -1,141 +1,125 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
-  // Add dummy data to fill the list
-  const dummyPlayers = [
-    {
-      id: 1,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: true,
-      cashoutMultiplier: 1.52,
-      payout: 152.0,
-    },
-    {
-      id: 2,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: true,
-      cashoutMultiplier: 1.5,
-      payout: 150.0,
-    },
-    {
-      id: 3,
-      username: "d***4",
-      betAmount: 100.0,
-      cashedOut: true,
-      cashoutMultiplier: 1.57,
-      payout: 157.0,
-    },
-    {
-      id: 4,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 5,
-      username: "d***2",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 6,
-      username: "d***3",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 7,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 8,
-      username: "d***4",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 9,
-      username: "d***3",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 10,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 11,
-      username: "d***9",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 12,
-      username: "d***5",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 13,
-      username: "d***5",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 14,
-      username: "d***5",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 15,
-      username: "d***8",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
-    {
-      id: 16,
-      username: "d***0",
-      betAmount: 100.0,
-      cashedOut: false,
-      cashoutMultiplier: null,
-      payout: 0,
-    },
+// Function to generate random usernames
+const generateRandomUsername = () => {
+  // Common first names
+  const firstNames = [
+    'Alex', 'Sam', 'Jordan', 'Taylor', 'Casey', 'Riley', 'Morgan', 'Quinn', 'Avery', 'Blake',
+    'Cameron', 'Drew', 'Emery', 'Finley', 'Gray', 'Harper', 'Indigo', 'Jamie', 'Kai', 'Logan',
+    'Mason', 'Noah', 'Owen', 'Parker', 'Quinn', 'River', 'Sage', 'Tyler', 'Unity', 'Vale',
+    'Willow', 'Xander', 'Yuki', 'Zara', 'Aria', 'Bella', 'Chloe', 'Diana', 'Emma', 'Fiona',
+    'Grace', 'Hannah', 'Iris', 'Jade', 'Kate', 'Luna', 'Maya', 'Nova', 'Olivia', 'Paige',
+    'Ruby', 'Sophia', 'Tara', 'Uma', 'Vera', 'Wren', 'Xena', 'Yara', 'Zoe', 'Ada',
+    'Ben', 'Carl', 'Dan', 'Eli', 'Finn', 'Gus', 'Hank', 'Ian', 'Jake', 'Kyle',
+    'Leo', 'Max', 'Nick', 'Oscar', 'Paul', 'Ryan', 'Sean', 'Tom', 'Vic', 'Wade'
   ];
 
+  // Common last name prefixes
+  const lastNames = [
+    'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+    'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+    'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson',
+    'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
+    'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts',
+    'Gomez', 'Phillips', 'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Reyes',
+    'Stewart', 'Morris', 'Morales', 'Murphy', 'Cook', 'Rogers', 'Gutierrez', 'Ortiz', 'Morgan', 'Cooper',
+    'Peterson', 'Bailey', 'Reed', 'Kelly', 'Howard', 'Ramos', 'Kim', 'Cox', 'Ward', 'Richardson'
+  ];
+
+  // Username patterns
+  const patterns = [
+    // First name + number
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${Math.floor(Math.random() * 999) + 1}`,
+    // First name + underscore + last name
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}_${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+    // First name + dot + last name
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}.${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+    // First name + last name (no separator)
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+    // First name + random word
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${['Gamer', 'Player', 'Pro', 'Master', 'King', 'Queen', 'Star', 'Hero', 'Legend', 'Boss'][Math.floor(Math.random() * 10)]}`,
+    // Random word + number
+    () => `${['Gaming', 'Player', 'Pro', 'Master', 'King', 'Queen', 'Star', 'Hero', 'Legend', 'Boss', 'Cool', 'Epic', 'Awesome', 'Amazing', 'Incredible'][Math.floor(Math.random() * 15)]}${Math.floor(Math.random() * 999) + 1}`,
+    // First letter of first name + last name + number
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)][0]}${lastNames[Math.floor(Math.random() * lastNames.length)]}${Math.floor(Math.random() * 99) + 1}`,
+    // First name + random emoji-inspired suffix
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${['Fire', 'Ice', 'Storm', 'Thunder', 'Lightning', 'Shadow', 'Phoenix', 'Dragon', 'Wolf', 'Eagle'][Math.floor(Math.random() * 10)]}`,
+    // Gaming-style usernames
+    () => `${['xX', 'Xx', ''][Math.floor(Math.random() * 3)]}${firstNames[Math.floor(Math.random() * firstNames.length)]}${['Xx', 'xX', ''][Math.floor(Math.random() * 3)]}`,
+    // Simple first name with number
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)].toLowerCase()}${Math.floor(Math.random() * 999) + 1}`
+  ];
+
+  // Randomly select a pattern and generate username
+  const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
+  return selectedPattern();
+};
+
+// Function to generate random bet amounts
+const generateRandomBetAmount = () => {
+  const amounts = [10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10000];
+  const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+  return randomAmount;
+};
+
+// Function to generate random player data
+const generateRandomPlayers = (count = 16) => {
+  const players = [];
+  for (let i = 0; i < count; i++) {
+    const betAmount = generateRandomBetAmount();
+    
+    // Generate random cashout multiplier (between 1.1x and 5.0x)
+    const cashoutMultiplier = (Math.random() * 3.9 + 1.1).toFixed(2);
+    
+    players.push({
+      id: i + 1,
+      username: generateRandomUsername(),
+      betAmount: betAmount,
+      cashedOut: false, // All players start as not cashed out
+      cashoutMultiplier: parseFloat(cashoutMultiplier), // Target multiplier for cashout
+      payout: 0, // Will be calculated when they cash out
+      hasCashedOut: false, // Track if they've already cashed out this game
+    });
+  }
+  return players;
+};
+
+const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
+  // Generate random dummy data once when component mounts
+  const dummyPlayers = useMemo(() => generateRandomPlayers(16), []);
+  
   // Combine real players with dummy data
   const allPlayers = [...players, ...dummyPlayers];
+
+  // Process players for cashout events during flying phase
+  const processedPlayers = useMemo(() => {
+    if (gamePhase === "flying" && currentMultiplier > 1.0) {
+      return allPlayers.map(player => {
+        // Check if player should cash out at current multiplier
+        if (!player.hasCashedOut && 
+            player.cashoutMultiplier && 
+            currentMultiplier >= player.cashoutMultiplier) {
+          
+          // Add some randomness to cashout timing (not exactly at target)
+          const actualCashoutMultiplier = Math.min(
+            currentMultiplier, 
+            player.cashoutMultiplier + (Math.random() * 0.5) // Add up to 0.5x randomness
+          );
+          
+          return {
+            ...player,
+            cashedOut: true,
+            hasCashedOut: true,
+            actualCashoutMultiplier: actualCashoutMultiplier.toFixed(2),
+            payout: (player.betAmount * actualCashoutMultiplier).toFixed(2)
+          };
+        }
+        return player;
+      });
+    }
+    return allPlayers;
+  }, [allPlayers, currentMultiplier, gamePhase]);
 
   const getPlayerStatus = (player) => {
     if (player.cashedOut) {
@@ -209,7 +193,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         <h3 className="text-base font-bold text-blue-200 flex items-center gap-2">
           <span>🧑‍🤝‍🧑 Active Players</span>
           <span className="text-xs bg-blue-900/80 px-2 py-0.5 rounded-full text-blue-300">
-            {allPlayers.length}
+            {processedPlayers.length}
           </span>
         </h3>
         <div className="text-xs text-blue-400 font-semibold">
@@ -220,12 +204,20 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
       </div>
 
       <div className="space-y-3 max-h-[570px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-900">
-        {allPlayers.map((player, index) => {
+        {processedPlayers.map((player, index) => {
           const isCashed = player.cashedOut;
           const isFlying = !player.cashedOut && gamePhase === "flying";
-          const profit = isCashed
+          
+          // Calculate profits
+          const actualProfit = isCashed
             ? player.payout - player.betAmount
             : player.betAmount * currentMultiplier - player.betAmount;
+          
+          // Calculate potential profit if they hadn't cashed out
+          const potentialProfit = player.betAmount * currentMultiplier - player.betAmount;
+          
+          // Use actual profit for display, but track potential for comparison
+          const profit = actualProfit;
 
           return (
             <div
@@ -284,6 +276,20 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
                 >
                   {profit > 0 ? "+" : ""}${profit.toFixed(2)}
                 </div>
+                
+                {/* Show potential earnings for cashed out players */}
+                {isCashed && gamePhase === "flying" && (
+                  <div className={`text-xs mt-1 font-medium ${
+                    potentialProfit > actualProfit 
+                      ? "text-orange-300 bg-orange-900/30 px-2 py-1 rounded-full border border-orange-500/50" // Could have earned more
+                      : "text-emerald-300 bg-emerald-900/30 px-2 py-1 rounded-full border border-emerald-500/50"  // Made the right choice
+                  }`}>
+                    {potentialProfit > actualProfit 
+                      ? `💭 Could earn: +$${potentialProfit.toFixed(2)}` 
+                      : `✅ Smart choice! +$${actualProfit.toFixed(2)}`
+                    }
+                  </div>
+                )}
                 <div className="flex items-center gap-2 mt-1">
                   {(isCashed || isFlying) && (
                     <span
@@ -304,7 +310,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
                     {isCashed || isFlying
                       ? `@ ${
                           isCashed
-                            ? player.cashoutMultiplier?.toFixed(2)
+                            ? (player.actualCashoutMultiplier || player.cashoutMultiplier?.toFixed(2))
                             : currentMultiplier.toFixed(2)
                         }x`
                       : ""}
@@ -316,12 +322,12 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         })}
       </div>
 
-      {allPlayers.length > 0 && (
+      {processedPlayers.length > 0 && (
         <div className="mt-4 pt-3 border-t border-gray-800 flex justify-between text-sm text-gray-400">
           <span>Total Bets:</span>
           <span className="text-white font-semibold">
             $
-            {allPlayers
+            {processedPlayers
               .reduce((sum, player) => sum + (player.betAmount || 0), 0)
               .toFixed(2)}
           </span>
