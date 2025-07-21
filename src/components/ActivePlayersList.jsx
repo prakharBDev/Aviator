@@ -3,10 +3,57 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Function to generate random usernames
 const generateRandomUsername = () => {
-  const prefixes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-  const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
-  const randomNumber = Math.floor(Math.random() * 10);
-  return `${randomPrefix}***${randomNumber}`;
+  // Common first names
+  const firstNames = [
+    'Alex', 'Sam', 'Jordan', 'Taylor', 'Casey', 'Riley', 'Morgan', 'Quinn', 'Avery', 'Blake',
+    'Cameron', 'Drew', 'Emery', 'Finley', 'Gray', 'Harper', 'Indigo', 'Jamie', 'Kai', 'Logan',
+    'Mason', 'Noah', 'Owen', 'Parker', 'Quinn', 'River', 'Sage', 'Tyler', 'Unity', 'Vale',
+    'Willow', 'Xander', 'Yuki', 'Zara', 'Aria', 'Bella', 'Chloe', 'Diana', 'Emma', 'Fiona',
+    'Grace', 'Hannah', 'Iris', 'Jade', 'Kate', 'Luna', 'Maya', 'Nova', 'Olivia', 'Paige',
+    'Ruby', 'Sophia', 'Tara', 'Uma', 'Vera', 'Wren', 'Xena', 'Yara', 'Zoe', 'Ada',
+    'Ben', 'Carl', 'Dan', 'Eli', 'Finn', 'Gus', 'Hank', 'Ian', 'Jake', 'Kyle',
+    'Leo', 'Max', 'Nick', 'Oscar', 'Paul', 'Ryan', 'Sean', 'Tom', 'Vic', 'Wade'
+  ];
+
+  // Common last name prefixes
+  const lastNames = [
+    'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+    'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+    'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson',
+    'Walker', 'Young', 'Allen', 'King', 'Wright', 'Scott', 'Torres', 'Nguyen', 'Hill', 'Flores',
+    'Green', 'Adams', 'Nelson', 'Baker', 'Hall', 'Rivera', 'Campbell', 'Mitchell', 'Carter', 'Roberts',
+    'Gomez', 'Phillips', 'Evans', 'Turner', 'Diaz', 'Parker', 'Cruz', 'Edwards', 'Collins', 'Reyes',
+    'Stewart', 'Morris', 'Morales', 'Murphy', 'Cook', 'Rogers', 'Gutierrez', 'Ortiz', 'Morgan', 'Cooper',
+    'Peterson', 'Bailey', 'Reed', 'Kelly', 'Howard', 'Ramos', 'Kim', 'Cox', 'Ward', 'Richardson'
+  ];
+
+  // Username patterns
+  const patterns = [
+    // First name + number
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${Math.floor(Math.random() * 999) + 1}`,
+    // First name + underscore + last name
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}_${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+    // First name + dot + last name
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}.${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+    // First name + last name (no separator)
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+    // First name + random word
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${['Gamer', 'Player', 'Pro', 'Master', 'King', 'Queen', 'Star', 'Hero', 'Legend', 'Boss'][Math.floor(Math.random() * 10)]}`,
+    // Random word + number
+    () => `${['Gaming', 'Player', 'Pro', 'Master', 'King', 'Queen', 'Star', 'Hero', 'Legend', 'Boss', 'Cool', 'Epic', 'Awesome', 'Amazing', 'Incredible'][Math.floor(Math.random() * 15)]}${Math.floor(Math.random() * 999) + 1}`,
+    // First letter of first name + last name + number
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)][0]}${lastNames[Math.floor(Math.random() * lastNames.length)]}${Math.floor(Math.random() * 99) + 1}`,
+    // First name + random emoji-inspired suffix
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)]}${['Fire', 'Ice', 'Storm', 'Thunder', 'Lightning', 'Shadow', 'Phoenix', 'Dragon', 'Wolf', 'Eagle'][Math.floor(Math.random() * 10)]}`,
+    // Gaming-style usernames
+    () => `${['xX', 'Xx', ''][Math.floor(Math.random() * 3)]}${firstNames[Math.floor(Math.random() * firstNames.length)]}${['Xx', 'xX', ''][Math.floor(Math.random() * 3)]}`,
+    // Simple first name with number
+    () => `${firstNames[Math.floor(Math.random() * firstNames.length)].toLowerCase()}${Math.floor(Math.random() * 999) + 1}`
+  ];
+
+  // Randomly select a pattern and generate username
+  const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
+  return selectedPattern();
 };
 
 // Function to generate random bet amounts
