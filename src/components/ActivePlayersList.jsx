@@ -207,9 +207,17 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         {processedPlayers.map((player, index) => {
           const isCashed = player.cashedOut;
           const isFlying = !player.cashedOut && gamePhase === "flying";
-          const profit = isCashed
+          
+          // Calculate profits
+          const actualProfit = isCashed
             ? player.payout - player.betAmount
             : player.betAmount * currentMultiplier - player.betAmount;
+          
+          // Calculate potential profit if they hadn't cashed out
+          const potentialProfit = player.betAmount * currentMultiplier - player.betAmount;
+          
+          // Use actual profit for display, but track potential for comparison
+          const profit = actualProfit;
 
           return (
             <div
@@ -268,6 +276,20 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
                 >
                   {profit > 0 ? "+" : ""}${profit.toFixed(2)}
                 </div>
+                
+                {/* Show potential earnings for cashed out players */}
+                {isCashed && gamePhase === "flying" && (
+                  <div className={`text-xs mt-1 ${
+                    potentialProfit > actualProfit 
+                      ? "text-yellow-400" // Could have earned more
+                      : "text-green-400"  // Made the right choice
+                  }`}>
+                    {potentialProfit > actualProfit 
+                      ? `Could earn: +$${potentialProfit.toFixed(2)}` 
+                      : `Smart choice! +$${actualProfit.toFixed(2)}`
+                    }
+                  </div>
+                )}
                 <div className="flex items-center gap-2 mt-1">
                   {(isCashed || isFlying) && (
                     <span
