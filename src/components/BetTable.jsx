@@ -1,22 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 
-const defaultData = [
-  { user: "d***1", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***3", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***9", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***0", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***4", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***8", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***5", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***1", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***3", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***9", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***3", bet: "100.00", multiplier: "—", cashOut: "—" },
-  { user: "d***9", bet: "100.00", multiplier: "—", cashOut: "—" },
-];
+// Function to generate random usernames
+const generateRandomUsername = () => {
+  const prefixes = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+  const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const randomNumber = Math.floor(Math.random() * 10);
+  return `${randomPrefix}***${randomNumber}`;
+};
+
+// Function to generate random bet amounts
+const generateRandomBetAmount = () => {
+  const amounts = [10, 25, 50, 100, 200, 500, 1000, 2500, 5000, 10000];
+  const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+  return randomAmount.toFixed(2);
+};
+
+// Function to generate default data with random usernames
+const generateDefaultData = () => {
+  const data = [];
+  for (let i = 0; i < 12; i++) {
+    data.push({
+      user: generateRandomUsername(),
+      bet: generateRandomBetAmount(),
+      multiplier: "—",
+      cashOut: "—"
+    });
+  }
+  return data;
+};
 
 const BetTable = () => {
   const [activeTab, setActiveTab] = useState("All Bets");
+
+  // Generate random data once when component mounts
+  const defaultData = useMemo(() => generateDefaultData(), []);
 
   const handleTabClick = (tab) => setActiveTab(tab);
 
