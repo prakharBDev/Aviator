@@ -2,6 +2,141 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
+  // Add dummy data to fill the list
+  const dummyPlayers = [
+    {
+      id: 1,
+      username: "d***9",
+      betAmount: 100.0,
+      cashedOut: true,
+      cashoutMultiplier: 1.52,
+      payout: 152.0,
+    },
+    {
+      id: 2,
+      username: "d***9",
+      betAmount: 100.0,
+      cashedOut: true,
+      cashoutMultiplier: 1.5,
+      payout: 150.0,
+    },
+    {
+      id: 3,
+      username: "d***4",
+      betAmount: 100.0,
+      cashedOut: true,
+      cashoutMultiplier: 1.57,
+      payout: 157.0,
+    },
+    {
+      id: 4,
+      username: "d***9",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 5,
+      username: "d***2",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 6,
+      username: "d***3",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 7,
+      username: "d***9",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 8,
+      username: "d***4",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 9,
+      username: "d***3",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 10,
+      username: "d***9",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 11,
+      username: "d***9",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 12,
+      username: "d***5",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 13,
+      username: "d***5",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 14,
+      username: "d***5",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 15,
+      username: "d***8",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+    {
+      id: 16,
+      username: "d***0",
+      betAmount: 100.0,
+      cashedOut: false,
+      cashoutMultiplier: null,
+      payout: 0,
+    },
+  ];
+
+  // Combine real players with dummy data
+  const allPlayers = [...players, ...dummyPlayers];
+
   const getPlayerStatus = (player) => {
     if (player.cashedOut) {
       return {
@@ -32,9 +167,9 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
 
     return {
       status: "waiting",
-      color: "text-yellow-400",
-      bgColor: "bg-yellow-500/20",
-      borderColor: "border-yellow-500/30",
+      color: "text-gray-400",
+      bgColor: "bg-gray-500/20",
+      borderColor: "border-gray-500/30",
     };
   };
 
@@ -73,7 +208,7 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white flex items-center gap-2">
           👥 Active Players
-          <span className="text-sm text-gray-400">({players.length})</span>
+          <span className="text-sm text-gray-400">({allPlayers.length})</span>
         </h3>
         <div className="text-xs text-gray-500">
           {gamePhase === "flying" && (
@@ -88,16 +223,16 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         </div>
       </div>
 
-      <div className="space-y-2 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
+      <div className="space-y-2 max-h-[550px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
         <AnimatePresence mode="popLayout">
-          {players.length === 0 ? (
+          {allPlayers.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
               <div className="text-4xl mb-2">🎮</div>
               <p>No active players</p>
               <p className="text-sm">Be the first to place a bet!</p>
             </div>
           ) : (
-            players.map((player, index) => {
+            allPlayers.map((player, index) => {
               const playerStatus = getPlayerStatus(player);
               return (
                 <motion.div
@@ -170,13 +305,13 @@ const ActivePlayersList = ({ players, currentMultiplier, gamePhase }) => {
         </AnimatePresence>
       </div>
 
-      {players.length > 0 && (
+      {allPlayers.length > 0 && (
         <div className="mt-4 pt-3 border-t border-gray-700">
           <div className="flex justify-between text-sm text-gray-400">
             <span>Total Bets:</span>
             <span className="text-white font-semibold">
               $
-              {players
+              {allPlayers
                 .reduce((sum, player) => sum + (player.betAmount || 0), 0)
                 .toFixed(2)}
             </span>

@@ -53,9 +53,12 @@ code {
 
 /* Animations */
 @keyframes pulse-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
   }
+
   50% {
     box-shadow: 0 0 30px rgba(16, 185, 129, 0.8);
   }
@@ -66,9 +69,12 @@ code {
 }
 
 @keyframes multiplier-glow {
-  0%, 100% {
+
+  0%,
+  100% {
     text-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
   }
+
   50% {
     text-shadow: 0 0 40px rgba(16, 185, 129, 1);
   }
@@ -88,9 +94,12 @@ code {
 }
 
 @keyframes gradient-shift {
-  0%, 100% {
+
+  0%,
+  100% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
@@ -138,6 +147,7 @@ code {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -175,9 +185,12 @@ code {
 }
 
 @keyframes flash {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.3;
   }
@@ -188,11 +201,11 @@ code {
   .mobile-stack {
     flex-direction: column;
   }
-  
+
   .mobile-full {
     width: 100%;
   }
-  
+
   .mobile-text-sm {
     font-size: 0.875rem;
   }
@@ -209,8 +222,13 @@ code {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Bet input focus effect */
@@ -240,6 +258,7 @@ code {
   0% {
     transform: translateY(0px);
   }
+
   100% {
     transform: translateY(-5px);
   }
